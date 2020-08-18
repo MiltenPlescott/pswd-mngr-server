@@ -12,6 +12,7 @@ plugins {
     id 'pmd'
     id 'com.github.spotbugs' version '4.2.3' // **spotbugs
     id 'net.ltgt.errorprone' version '1.2.1'
+    id 'com.dorongold.task-tree' version '1.5'
 }
 
 repositories {
