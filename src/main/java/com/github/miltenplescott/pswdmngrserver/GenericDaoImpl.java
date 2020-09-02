@@ -6,13 +6,12 @@
  * SPDX-License-Identifier: MIT
  */
 
-package com.github.miltenplescott.pswdmngrserver.user;
+package com.github.miltenplescott.pswdmngrserver;
 
 import java.util.List;
 import java.util.Optional;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
@@ -23,40 +22,46 @@ import javax.persistence.criteria.CriteriaQuery;
  * @author Milten Plescott
  */
 @TransactionManagement(TransactionManagementType.CONTAINER)
-public class UserDaoImpl implements UserDao {
+public class GenericDaoImpl<T extends BaseEntity> implements GenericDao<T> {
 
     @PersistenceContext(unitName = "pswd-mngr-persistance-unit", type = PersistenceContextType.TRANSACTION)
     private EntityManager entityManager;
 
-    @Override
-    public void createUser(User user) throws EntityExistsException {
-        entityManager.persist(user);
+    private final Class<T> type;
+
+    public GenericDaoImpl(Class<T> type) {
+        this.type = type;
     }
 
     @Override
-    public Optional<User> findUser(Long id) {
-        return Optional.ofNullable(entityManager.find(User.class, id));
+    public void create(T t) {
+        entityManager.persist(t);
     }
 
     @Override
-    public List<User> findAll() {
-        return entityManager.createQuery("SELECT u FROM User u", User.class).getResultList();
+    public Optional<T> find(Long id) {
+        return Optional.ofNullable(entityManager.find(type, id));
     }
 
-    public List<User> findAllUsingCriteria() {
-        CriteriaQuery<User> cq = entityManager.getCriteriaBuilder().createQuery(User.class);
-        cq.select(cq.from(User.class));
+    @Override
+    public List<T> findAll() {
+        return entityManager.createQuery("SELECT t FROM " + type.getSimpleName() + " t", type).getResultList();
+    }
+
+    public List<T> findAllUsingCriteria() {
+        CriteriaQuery<T> cq = entityManager.getCriteriaBuilder().createQuery(type);
+        cq.select(cq.from(type));
         return entityManager.createQuery(cq).getResultList();
     }
 
     @Override
-    public User updateUser(User user) {
-        return entityManager.merge(user);
+    public T update(T t) {
+        return entityManager.merge(t);
     }
 
     @Override
-    public void deleteUser(User user) {
-        entityManager.remove(user);
+    public void delete(T t) {
+        entityManager.remove(t);
     }
 
 }
