@@ -8,6 +8,7 @@
 
 package com.github.miltenplescott.pswdmngrserver.user;
 
+import com.github.miltenplescott.pswdmngrserver.GenericDao;
 import javax.persistence.EntityExistsException;
 
 /**
@@ -17,13 +18,13 @@ import javax.persistence.EntityExistsException;
 public class UserService {
 
     // TODO: inject
-    private UserDao userDao;
+    private GenericDao<User> userDao; // = new GenericDaoImpl<>(User.class);
 
     void createUser(String userName) {
         User user = new User();
         user.setName(userName);
         try {
-            userDao.createUser(user);
+            userDao.create(user);
         }
         catch (EntityExistsException e) {
             System.err.println("User with ID=" + user.getId() + " already exists.");
