@@ -11,14 +11,13 @@ package com.github.miltenplescott.pswdmngrserver.user;
 import com.github.miltenplescott.pswdmngrserver.BaseEntity;
 import java.io.Serializable;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  *
  * @author Milten Plescott
  */
 @Entity
-@Table(name = "\"User\"")
+//@Table(name = "\"User\"")
 public class User extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
