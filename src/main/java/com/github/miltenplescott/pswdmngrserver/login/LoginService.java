@@ -8,6 +8,7 @@
 
 package com.github.miltenplescott.pswdmngrserver.login;
 
+import com.github.miltenplescott.pswdmngrserver.GenericDao;
 import javax.persistence.EntityExistsException;
 
 /**
@@ -16,15 +17,14 @@ import javax.persistence.EntityExistsException;
  */
 public class LoginService {
 
-
     // TODO: inject
-    private LoginDao loginDao;
+    private GenericDao<Login> loginDao; // = new GenericDaoImpl<>(Login.class);
 
     void createLogin(String loginTarget) {
         Login login = new Login();
         login.setTarget(loginTarget);
         try {
-            loginDao.createLogin(login);
+            loginDao.create(login);
         }
         catch (EntityExistsException e) {
             System.err.println("Login with ID=" + login.getId() + " already exists.");
