@@ -58,6 +58,22 @@ task stopServer(type:Exec) {
     args 'stop-domain'
 }
 
+task startDB(type:Exec) {
+    description = 'Starts Payara database.'
+    workingDir asadminDir
+    commandLine asadminFile
+
+    args 'start-database'
+}
+
+task stopDB(type:Exec) {
+    description = 'Stops Payara database.'
+    workingDir asadminDir
+    commandLine asadminFile
+
+    args 'stop-database'
+}
+
 task deploy(dependsOn: 'war', type: Exec) {
     description = 'Deploys WAR.'
     workingDir asadminDir
