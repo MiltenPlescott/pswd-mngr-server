@@ -39,7 +39,7 @@ public class GenericDaoImpl<T extends BaseEntity> implements GenericDao<T> {
     }
 
     @Override
-    public Optional<T> find(Long id) {
+    public Optional<T> findOne(Long id) {
         return Optional.ofNullable(entityManager.find(type, id));
     }
 

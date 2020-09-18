@@ -19,7 +19,7 @@ public interface GenericDao<T extends BaseEntity> {
 
     void create(T t);
 
-    Optional<T> find(Long id);
+    Optional<T> findOne(Long id);
 
     List<T> findAll();
 
