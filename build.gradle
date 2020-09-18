@@ -27,7 +27,8 @@ repositories {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    providedCompile 'com.google.errorprone:error_prone_core:2.4.0'
+    compileOnly 'com.google.errorprone:error_prone_core:2.4.0'
+    testCompileOnly 'com.google.errorprone:error_prone_core:2.4.0'
     providedCompile 'javax:javaee-web-api:8.0.1'
     //providedCompile 'fish.payara.distributions:payara-web:5.201'
     //providedCompile 'fish.payara.distributions:payara-web:5.2020.3'
