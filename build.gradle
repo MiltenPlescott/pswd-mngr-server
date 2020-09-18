@@ -58,6 +58,13 @@ dependencies {
     //
     // JSON-P - RI
     testImplementation 'org.glassfish:jakarta.json:1.1.6'
+
+    // JSON-B - API
+    // artifact 'javax.json.bind:jakarta.json.bind-api:1.0.2' included in 'javax:javaee-web-api:8.0.1'
+    //
+    // JSON-B - RI
+    testImplementation 'org.eclipse:yasson:1.0.6'
+    // providedCompile 'org.eclipse:yasson:1.0.6' // if needed outside Test classes
 }
 
 java {
