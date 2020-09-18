@@ -52,6 +52,12 @@ dependencies {
     //
     // Validation - EL (Expression Language)
     providedCompile 'org.glassfish:jakarta.el:3.0.3'
+
+    // JSON-P - API
+    // artifact 'javax.json:javax.json-api:1.1.4' included in 'javax:javaee-web-api:8.0.1'
+    //
+    // JSON-P - RI
+    testImplementation 'org.glassfish:jakarta.json:1.1.6'
 }
 
 java {
