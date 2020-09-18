@@ -16,6 +16,10 @@ plugins {
     id 'com.dorongold.task-tree' version '1.5'
 }
 
+project.ext.setProperty('payaraHome', System.getenv('PAYARA_HOME') ?: project.findProperty('payaraHome'))
+project.ext.setProperty('asadminDir', "${payaraHome}${File.separator}bin")
+project.ext.setProperty('asadminFile', System.properties['os.name'].toLowerCase().contains('windows') ? ['cmd', '/c', 'asadmin.bat'] : './asadmin')
+
 repositories {
     jcenter()
     mavenCentral()
@@ -38,11 +42,7 @@ java {
 //    mainClassName = 'com.github.miltenplescott.pswdmngrserver.App'
 //}
 
-project.ext.setProperty('payaraHome', System.getenv('PAYARA_HOME') ?: project.findProperty('payaraHome'))
-project.ext.setProperty('asadminDir', "${payaraHome}${File.separator}bin")
-project.ext.setProperty('asadminFile', System.properties['os.name'].toLowerCase().contains('windows') ? ['cmd', '/c', 'asadmin.bat'] : './asadmin')
-
-task startServer(type:Exec) {
+task startServer(type: Exec) {
     description = 'Starts Payara server.'
     workingDir asadminDir
     commandLine asadminFile
@@ -50,7 +50,7 @@ task startServer(type:Exec) {
     args 'start-domain'
 }
 
-task stopServer(type:Exec) {
+task stopServer(type: Exec) {
     description = 'Stops Payara server.'
     workingDir asadminDir
     commandLine asadminFile
@@ -58,7 +58,7 @@ task stopServer(type:Exec) {
     args 'stop-domain'
 }
 
-task startDB(type:Exec) {
+task startDB(type: Exec) {
     description = 'Starts Payara database.'
     workingDir asadminDir
     commandLine asadminFile
@@ -66,7 +66,7 @@ task startDB(type:Exec) {
     args 'start-database'
 }
 
-task stopDB(type:Exec) {
+task stopDB(type: Exec) {
     description = 'Stops Payara database.'
     workingDir asadminDir
     commandLine asadminFile
@@ -79,7 +79,7 @@ task deploy(dependsOn: 'war', type: Exec) {
     workingDir asadminDir
     commandLine asadminFile
 
-    args 'deploy', "--name=${rootProject.name}", "${war.archivePath}"
+    args 'deploy', "--contextroot=/", "--name=${rootProject.name}", "${war.archivePath}"
 }
 
 task redeploy(dependsOn: 'war', type: Exec) {
