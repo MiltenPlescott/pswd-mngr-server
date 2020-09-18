@@ -30,8 +30,8 @@ dependencies {
     compileOnly 'com.google.errorprone:error_prone_core:2.4.0'
     testCompileOnly 'com.google.errorprone:error_prone_core:2.4.0'
     providedCompile 'javax:javaee-web-api:8.0.1'
-    //providedCompile 'fish.payara.distributions:payara-web:5.201'
-    //providedCompile 'fish.payara.distributions:payara-web:5.2020.3'
+    compileOnly 'javax:javaee-web-api:8.0.1:javadoc'
+    // providedCompile 'fish.payara.distributions:payara-web:5.2020.3'
 
     // JPA - API
     // artifact 'org.eclipse.persistence:javax.persistence:2.2.0' included in java 'javax:javaee-web-api:8.0.1'
