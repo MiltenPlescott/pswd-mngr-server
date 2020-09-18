@@ -32,6 +32,12 @@ dependencies {
     providedCompile 'javax:javaee-web-api:8.0.1'
     //providedCompile 'fish.payara.distributions:payara-web:5.201'
     //providedCompile 'fish.payara.distributions:payara-web:5.2020.3'
+
+    // JPA - API
+    // artifact 'org.eclipse.persistence:javax.persistence:2.2.0' included in java 'javax:javaee-web-api:8.0.1'
+    //
+    // JPA - RI
+    providedCompile 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.6' // aka eclipselink
 }
 
 java {
