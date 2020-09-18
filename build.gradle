@@ -38,6 +38,20 @@ dependencies {
     //
     // JPA - RI
     providedCompile 'org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.6' // aka eclipselink
+
+    // Validation - API
+    // artifact 'javax.validation:validation-api:2.0.0.Final' included in java 'javax:javaee-web-api:8.0.1'
+    //
+    // Validation - RI
+    providedCompile 'org.hibernate.validator:hibernate-validator:6.1.2.Final'
+    testImplementation 'org.hibernate.validator:hibernate-validator:6.1.2.Final'
+    //
+    // Validation - Annotation Processor
+    compileOnly 'org.hibernate.validator:hibernate-validator-annotation-processor:6.1.2.Final'
+    // annotationProcessor 'org.hibernate.validator:hibernate-validator-annotation-processor:6.1.2.Final' // error-prone error
+    //
+    // Validation - EL (Expression Language)
+    providedCompile 'org.glassfish:jakarta.el:3.0.3'
 }
 
 java {
