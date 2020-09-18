@@ -11,7 +11,7 @@ plugins {
     id 'war'
     //id 'application' // replace with 'base' after setting up the server
     id 'pmd'
-    id 'com.github.spotbugs' version '4.2.3' // **spotbugs
+    //    id 'com.github.spotbugs' version '4.2.3' // **spotbugs
     id 'net.ltgt.errorprone' version '1.2.1'
     id 'com.dorongold.task-tree' version '1.5'
 }
@@ -106,28 +106,28 @@ task listApplications(type: Exec) {
     args 'list-applications'
 }
 
-spotbugs { // **spotbugs
-    toolVersion = '4.0.3'
-    ignoreFailures = true
-} // **spotbugs
+//spotbugs { // **spotbugs
+//    toolVersion = '4.0.3'
+//    ignoreFailures = true
+//} // **spotbugs
 
-spotbugsMain { // **spotbugs
-    reports {
-        html {
-            enabled = true
-            stylesheet = 'fancy-hist.xsl'
-        }
-    }
-} // **spotbugs
+//spotbugsMain { // **spotbugs
+//    reports {
+//        html {
+//            enabled = true
+//            stylesheet = 'fancy-hist.xsl'
+//        }
+//    }
+//} // **spotbugs
 
-spotbugsTest { // **spotbugs
-    reports {
-        html {
-            enabled = true
-            stylesheet = 'fancy-hist.xsl'
-        }
-    }
-} // **spotbugs
+//spotbugsTest { // **spotbugs
+//    reports {
+//        html {
+//            enabled = true
+//            stylesheet = 'fancy-hist.xsl'
+//        }
+//    }
+//} // **spotbugs
 
 pmd {
     toolVersion = '6.24.0'
