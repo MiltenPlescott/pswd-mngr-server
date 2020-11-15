@@ -17,10 +17,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 import javax.persistence.criteria.CriteriaQuery;
 
-/**
- *
- * @author Milten Plescott
- */
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class GenericDaoImpl<T extends BaseEntity> implements GenericDao<T> {
 
@@ -31,6 +27,11 @@ public class GenericDaoImpl<T extends BaseEntity> implements GenericDao<T> {
 
     public GenericDaoImpl(Class<T> type) {
         this.type = type;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     @Override
@@ -45,10 +46,6 @@ public class GenericDaoImpl<T extends BaseEntity> implements GenericDao<T> {
 
     @Override
     public List<T> findAll() {
-        return entityManager.createQuery("SELECT t FROM " + type.getSimpleName() + " t", type).getResultList();
-    }
-
-    public List<T> findAllUsingCriteria() {
         CriteriaQuery<T> cq = entityManager.getCriteriaBuilder().createQuery(type);
         cq.select(cq.from(type));
         return entityManager.createQuery(cq).getResultList();

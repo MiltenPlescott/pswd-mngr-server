@@ -8,26 +8,79 @@
 
 package com.github.miltenplescott.pswdmngrserver.user;
 
-import com.github.miltenplescott.pswdmngrserver.GenericDao;
+import com.github.miltenplescott.pswdmngrserver.ProblemDto;
+import java.util.Optional;
+import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityExistsException;
 
-/**
- *
- * @author Milten Plescott
- */
+import static com.github.miltenplescott.pswdmngrserver.CryptoUtils.*;
+import static java.util.Objects.requireNonNull;
+
+@Stateless
 public class UserService {
 
-    // TODO: inject
-    private GenericDao<User> userDao; // = new GenericDaoImpl<>(User.class);
+    @Inject
+    private UserDao userDao;
 
-    void createUser(String userName) {
+    @Inject
+    private UserValidation validator;
+
+    public UserService() {
+    }
+
+    public Optional<ProblemDto> createUser(String username, String masterPswd) {
         User user = new User();
-        user.setName(userName);
-        try {
-            userDao.create(user);
+        user.setUsername(username);
+
+        Optional<ProblemDto> maybeProblemDto = validator.validate(user);
+        if (maybeProblemDto.isEmpty()) {  // user validation OK
+            try {
+                ProblemDto problemDto;
+                if (userDao.userWithNameExists(username)) {  // username not unique
+                    problemDto = UserProblems.createDefaultUsernameProblem();
+                    UserProblems.usernameNotUniqueProblem(problemDto);
+                    return Optional.of(problemDto);  // return username not unique problem
+                }
+                else {  // proceed with masterPswd checks
+                    byte[] decodedPswd = null;
+                    problemDto = UserProblems.createDefaultPasswordProblem();
+
+                    try {
+                        decodedPswd = requireNonNull(decodePswd(requireNonNull(masterPswd)));
+                        if (decodedPswd.length != KDF_INPUT_LENGTH_BYTES) {
+                            clearArray(decodedPswd);
+                            UserProblems.masterPswdLengthProblem(problemDto);
+                            return Optional.of(problemDto);  // return length problem
+                        }
+                    }
+                    catch (IllegalArgumentException | NullPointerException e) {
+                        clearArray(decodedPswd);
+                        UserProblems.masterPswdFormatProblem(problemDto);
+                        return Optional.of(problemDto);  // return base64 format problem
+                    }
+
+                    // KDF
+                    byte[] salt = genSalt();
+                    byte[] kdfOutput = kdfAndSalt(decodedPswd, salt);
+                    user.setSalt(salt);
+                    user.setMasterPswd(kdfOutput);
+
+                    // clean up
+                    clearArray(decodedPswd);
+                    clearArray(salt);
+                    clearArray(kdfOutput);
+
+                    userDao.create(user);  // persist user in DB
+                    return Optional.empty();  // return OK
+                }
+            }
+            catch (EntityExistsException e) {
+                throw new AssertionError("EntityExistsException: userDao.userWithNameExists(username) check failed");
+            }
         }
-        catch (EntityExistsException e) {
-            System.err.println("User with ID=" + user.getId() + " already exists.");
+        else {  // user validation error
+            return maybeProblemDto;
         }
     }
 

@@ -10,48 +10,71 @@ package com.github.miltenplescott.pswdmngrserver.user;
 
 import com.github.miltenplescott.pswdmngrserver.BaseEntity;
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-/**
- *
- * @author Milten Plescott
- */
 @Entity
 //@Table(name = "\"User\"")
 public class User extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String name;
+    @Transient
+    static final int USERNAME_MIN_LENGTH = 3;
 
-//    @Column(columnDefinition = "BINARY(32)")
-//    private String masterPswd;
-//
-//    @Column(columnDefinition = "BINARY(16)")
-//    private String salt;
+    @Transient
+    static final int USERNAME_MAX_LENGTH = 50;
 
-    public String getName() {
-        return name;
+    @Transient
+    static final String USERNAME_REGEX = "^[a-zA-Z0-9]*$";
+
+    @Column(nullable = false, unique = true, length = USERNAME_MAX_LENGTH)
+    private String username;
+
+    @Column(name = "master_pswd", nullable = false)
+    private byte[] masterPswd;
+
+    @Column(nullable = false)
+    private byte[] salt;
+
+    public User() {
+        super();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public User(String username, byte[] masterPswd) {
+        this.username = username;
+        this.masterPswd = masterPswd.clone();
     }
 
-//    public String getMasterPswd() {
-//        return masterPswd;
-//    }
-//
-//    public void setMasterPswd(String masterPswd) {
-//        this.masterPswd = masterPswd;
-//    }
-//
-//    public String getSalt() {
-//        return salt;
-//    }
-//
-//    public void setSalt(String salt) {
-//        this.salt = salt;
-//    }
+    @NotNull(message = "Username must not be null.")
+    @Size(min = USERNAME_MIN_LENGTH, max = USERNAME_MAX_LENGTH, message = "Username length must be between {min} and {max} characters.")
+    @Pattern(regexp = USERNAME_REGEX, message = "Username must follow {regexp} pattern.")
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public byte[] getMasterPswd() {
+        return masterPswd.clone();
+    }
+
+    public void setMasterPswd(byte[] masterPswd) {
+        this.masterPswd = masterPswd.clone();
+    }
+
+    public byte[] getSalt() {
+        return salt.clone();
+    }
+
+    public void setSalt(byte[] salt) {
+        this.salt = salt.clone();
+    }
 
 }

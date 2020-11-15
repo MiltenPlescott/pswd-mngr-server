@@ -10,12 +10,11 @@ package com.github.miltenplescott.pswdmngrserver;
 
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.EntityManager;
 
-/**
- *
- * @author Milten Plescott
- */
 public interface GenericDao<T extends BaseEntity> {
+
+    public EntityManager getEntityManager();
 
     void create(T t);
 

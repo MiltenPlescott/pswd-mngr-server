@@ -12,13 +12,14 @@ plugins {
     //id 'application' // replace with 'base' after setting up the server
     id 'pmd'
     //    id 'com.github.spotbugs' version '4.2.3' // **spotbugs
-    id 'net.ltgt.errorprone' version '1.2.1'
+    //    id 'net.ltgt.errorprone' version '1.2.1'
     id 'com.dorongold.task-tree' version '1.5'
 }
 
 project.ext.setProperty('payaraHome', System.getenv('PAYARA_HOME') ?: project.findProperty('payaraHome'))
 project.ext.setProperty('asadminDir', "${payaraHome}${File.separator}bin")
 project.ext.setProperty('asadminFile', System.properties['os.name'].toLowerCase().contains('windows') ? ['cmd', '/c', 'asadmin.bat'] : './asadmin')
+project.ext.setProperty('h2jar', "${payaraHome}${File.separator}h2db${File.separator}bin${File.separator}h2.jar")
 
 repositories {
     jcenter()
@@ -27,8 +28,8 @@ repositories {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    compileOnly 'com.google.errorprone:error_prone_core:2.4.0'
-    testCompileOnly 'com.google.errorprone:error_prone_core:2.4.0'
+    //    compileOnly 'com.google.errorprone:error_prone_core:2.4.0'
+    //    testCompileOnly 'com.google.errorprone:error_prone_core:2.4.0'
     providedCompile 'javax:javaee-web-api:8.0.1'
     compileOnly 'javax:javaee-web-api:8.0.1:javadoc'
     // providedCompile 'fish.payara.distributions:payara-web:5.2020.3'
@@ -60,11 +61,18 @@ dependencies {
     testImplementation 'org.glassfish:jakarta.json:1.1.6'
 
     // JSON-B - API
-    // artifact 'javax.json.bind:jakarta.json.bind-api:1.0.2' included in 'javax:javaee-web-api:8.0.1'
+    // artifact 'javax.json.bind:javax.json.bind-api:1.0' included in 'javax:javaee-web-api:8.0.1'
     //
     // JSON-B - RI
     testImplementation 'org.eclipse:yasson:1.0.6'
     // providedCompile 'org.eclipse:yasson:1.0.6' // if needed outside Test classes
+
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.66'
+
+    implementation 'com.google.guava:guava:30.0-jre'
+
+    annotationProcessor 'org.eclipse.persistence:org.eclipse.persistence.jpa.modelgen.processor:2.7.6'
+
 }
 
 java {
@@ -72,9 +80,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_11
 }
 
-//application {
-//    mainClassName = 'com.github.miltenplescott.pswdmngrserver.App'
-//}
+sourceSets.main.output.resourcesDir = sourceSets.main.java.outputDir
+compileJava.dependsOn(processResources)
+sourceSets.main.java.srcDirs += 'build/generated/sources/annotationProcessor/java/main'
 
 task startServer(type: Exec) {
     description = 'Starts Payara server.'
@@ -82,6 +90,19 @@ task startServer(type: Exec) {
     commandLine asadminFile
 
     args 'start-domain'
+}
+
+// NetBeans Debug -> Attach Debugger
+//     debugger = Java Debugger JPDA
+//     connector = SocketAttach
+//     host = localhost
+//     port = 9009
+task debugServer(type: Exec) {
+    description = 'Starts Payara server in debug mode.'
+    workingDir asadminDir
+    commandLine asadminFile
+
+    args 'start-domain', '--debug'
 }
 
 task stopServer(type: Exec) {
@@ -126,18 +147,27 @@ task redeploy(dependsOn: 'war', type: Exec) {
 
 task undeploy(type: Exec) {
     description = 'Undeploys WAR.'
-    workingDir asadminDir;
-    commandLine asadminFile;
+    workingDir asadminDir
+    commandLine asadminFile
 
     args 'undeploy', "${rootProject.name}"
 }
 
 task listApplications(type: Exec) {
     description = 'Lists applications deployed on Payara server.'
-    workingDir asadminDir;
-    commandLine asadminFile;
+    workingDir asadminDir
+    commandLine asadminFile
 
     args 'list-applications'
+}
+
+task h2console {
+    doFirst {
+        ext.process = new ProcessBuilder()
+            .directory(new File(System.getenv('JAVA_HOME') + "${File.separator}bin"))
+            .command("java", "-jar", "${h2jar}")
+            .start()
+    }
 }
 
 //spotbugs { // **spotbugs
