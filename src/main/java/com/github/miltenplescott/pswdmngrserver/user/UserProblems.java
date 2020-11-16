@@ -16,10 +16,12 @@ public final class UserProblems {
 
     public static final String PROBLEM_TITLE_USERNAME = "Invalid username.";
     public static final String PROBLEM_TITLE_PSWD = "Invalid master password.";
+    public static final String PROBLEM_TITLE_AUTH = "Authentication failed.";
 
     public static final String MSG_USERNAME_NOT_UNIQUE = "Username already exists.";
     public static final String MSG_PSWD_LENGTH = "Master password is required to be " + (8 * CryptoUtils.KDF_INPUT_LENGTH_BYTES) + "-bit long.";
     public static final String MSG_PSWD_FORMAT = "Master password is not a valid Base64 format.";
+    public static final String MSG_AUTH = "Invalid username or master password.";
 
     private UserProblems() {
         throw new AssertionError("Suppress default constructor for noninstantiability.");
@@ -49,6 +51,16 @@ public final class UserProblems {
 
     public static ProblemDto masterPswdFormatProblem(ProblemDto dto) {
         dto.getInvalidParams().add(new ProblemDto.Extension("masterPswd", MSG_PSWD_FORMAT));
+        return dto;
+    }
+
+    public static ProblemDto createDefaultAuthProblem() {
+        return new ProblemDto(PROBLEM_TITLE_AUTH);
+    }
+
+    public static ProblemDto authProblem(ProblemDto dto) {
+        dto.getInvalidParams().add(new ProblemDto.Extension("username", MSG_AUTH));
+        dto.getInvalidParams().add(new ProblemDto.Extension("masterPswd", MSG_AUTH));
         return dto;
     }
 

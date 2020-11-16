@@ -9,6 +9,7 @@
 package com.github.miltenplescott.pswdmngrserver.user;
 
 import com.github.miltenplescott.pswdmngrserver.ProblemDto;
+import java.util.Arrays;
 import java.util.Optional;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -25,6 +26,9 @@ public class UserService {
 
     @Inject
     private UserValidation validator;
+
+    @Inject
+    private AuthTokenManager tokenManager;
 
     public UserService() {
     }
@@ -81,6 +85,50 @@ public class UserService {
         }
         else {  // user validation error
             return maybeProblemDto;
+        }
+    }
+
+    public Optional<ProblemDto> login(String username, String masterPswd, final AuthTokenResponseDto tokenDto) {
+        ProblemDto problemDto;
+        Optional<User> maybeUser = userDao.findByName(username);
+        if (maybeUser.isPresent()) {  // username found in DB
+            User user = maybeUser.get();
+
+            byte[] decodedPswd = null;
+            try {
+                decodedPswd = requireNonNull(decodePswd(requireNonNull(masterPswd)));
+            }
+            catch (IllegalArgumentException | NullPointerException e) {
+                clearArray(decodedPswd);
+                problemDto = UserProblems.createDefaultAuthProblem();
+                UserProblems.authProblem(problemDto);
+                return Optional.of(problemDto);
+            }
+
+            // KDF
+            byte[] kdfOutput = kdfAndSalt(decodedPswd, user.getSalt());
+            if (Arrays.equals(kdfOutput, user.getMasterPswd())) {  // correct password
+                tokenDto.setToken(tokenManager.generateToken(username));
+                tokenDto.setTokenType(AuthTokenResponseDto.BEARER);
+                tokenDto.setExpiration(tokenManager.getTokenExpirationMs(tokenDto.getToken()));
+            }
+            else {
+                problemDto = UserProblems.createDefaultAuthProblem();
+                UserProblems.authProblem(problemDto);
+                return Optional.of(problemDto);
+            }
+
+            // clean up
+            clearArray(decodedPswd);
+            clearArray(kdfOutput);
+
+            return Optional.empty();
+        }
+        else {  // username not in DB
+            tokenManager.deleteTokenForUsername(username);
+            problemDto = UserProblems.createDefaultAuthProblem();
+            UserProblems.authProblem(problemDto);
+            return Optional.of(problemDto);
         }
     }
 

@@ -48,4 +48,27 @@ public class UserResource {
         }
     }
 
+    @POST
+    @Path("login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON, ProblemDto.MEDIA_TYPE_PROBLEM_JSON})
+    public Response login(AuthenticationDto dto) {
+        AuthTokenResponseDto token = new AuthTokenResponseDto();
+        Optional<ProblemDto> maybeProblem = userService.login(dto.getUsername(), dto.getMasterPswd(), token);
+
+        if (maybeProblem.isEmpty()) {
+            return Response.
+                status(Response.Status.OK).
+                type(MediaType.APPLICATION_JSON + UTF8_SUFFIX).
+                entity(token).build();
+        }
+        else {
+            maybeProblem.get().setStatus(Response.Status.BAD_REQUEST.getStatusCode());
+            return Response.
+                status(maybeProblem.get().getStatus()).
+                type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + UTF8_SUFFIX).
+                entity(maybeProblem.get()).build();
+        }
+    }
+
 }

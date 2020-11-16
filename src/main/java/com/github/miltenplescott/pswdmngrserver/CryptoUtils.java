@@ -68,6 +68,14 @@ public final class CryptoUtils {
         return decodeBase64(pswd);
     }
 
+    public static String encodeToken(byte[] token) {
+        return encodeBase64(token);
+    }
+
+    public static byte[] decodeToken(String token) throws IllegalArgumentException {
+        return decodeBase64(token);
+    }
+
     private static String encodeBase64(byte[] bytes) {
         return Base64.getEncoder().encodeToString(bytes);
     }
