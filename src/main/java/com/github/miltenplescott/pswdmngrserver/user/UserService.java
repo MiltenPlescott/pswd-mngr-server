@@ -132,4 +132,8 @@ public class UserService {
         }
     }
 
+    public void logout(String username) {
+        tokenManager.deleteTokenForUsername(username);
+    }
+
 }

@@ -13,10 +13,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -70,5 +72,21 @@ public class UserResource {
                 entity(maybeProblem.get()).build();
         }
     }
+
+    @POST
+    @Path("logout")
+    @Produces(ProblemDto.MEDIA_TYPE_PROBLEM_JSON)
+    @Secured
+    public Response logout(@Context HttpServletRequest request) {
+        Optional<String> maybeUsername = Optional.ofNullable((String) request.getAttribute(AuthenticationRequestFilter.PROPERTY_USERNAME));
+        if (maybeUsername.isPresent()) {
+            userService.logout(maybeUsername.get());
+            return Response.status(Response.Status.OK).build();
+        }
+        else {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
 }

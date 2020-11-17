@@ -17,11 +17,17 @@ public final class UserProblems {
     public static final String PROBLEM_TITLE_USERNAME = "Invalid username.";
     public static final String PROBLEM_TITLE_PSWD = "Invalid master password.";
     public static final String PROBLEM_TITLE_AUTH = "Authentication failed.";
+    public static final String PROBLEM_TITLE_AUTHORIZATION_HEADER = "Invalid authorization header.";
+    public static final String PROBLEM_TITLE_TOKEN = "Invalid authentication token.";
 
     public static final String MSG_USERNAME_NOT_UNIQUE = "Username already exists.";
     public static final String MSG_PSWD_LENGTH = "Master password is required to be " + (8 * CryptoUtils.KDF_INPUT_LENGTH_BYTES) + "-bit long.";
     public static final String MSG_PSWD_FORMAT = "Master password is not a valid Base64 format.";
     public static final String MSG_AUTH = "Invalid username or master password.";
+    public static final String MSG_AUTHORIZATION_HEADER = "Authorization header could not be parsed (possible causes: missing header, wrong syntax, unrecognized authentication scheme, etc.).";
+    public static final String MSG_TOKEN_LENGTH = "Authentication token is required to be " + (8 * AuthTokenManager.TOKEN_LENGTH_BYTES) + "-bit long.";
+    public static final String MSG_TOKEN_FORMAT = "Authentication token is not a valid Base64 format.";
+    public static final String MSG_TOKEN_EXPIRED = "Authentication token has expired.";
 
     private UserProblems() {
         throw new AssertionError("Suppress default constructor for noninstantiability.");
@@ -61,6 +67,34 @@ public final class UserProblems {
     public static ProblemDto authProblem(ProblemDto dto) {
         dto.getInvalidParams().add(new ProblemDto.Extension("username", MSG_AUTH));
         dto.getInvalidParams().add(new ProblemDto.Extension("masterPswd", MSG_AUTH));
+        return dto;
+    }
+
+    public static ProblemDto createDefaultAuthorizationHeaderProblem() {
+        return new ProblemDto(PROBLEM_TITLE_AUTHORIZATION_HEADER);
+    }
+
+    public static ProblemDto authorizationHeaderProblem(ProblemDto dto) {
+        dto.getInvalidParams().add(new ProblemDto.Extension("Authorization", MSG_AUTHORIZATION_HEADER));
+        return dto;
+    }
+
+    public static ProblemDto createDefaultTokenProblem() {
+        return new ProblemDto(PROBLEM_TITLE_TOKEN);
+    }
+
+    public static ProblemDto tokenLengthProblem(ProblemDto dto) {
+        dto.getInvalidParams().add(new ProblemDto.Extension("token", MSG_TOKEN_LENGTH));
+        return dto;
+    }
+
+    public static ProblemDto tokenFormatProblem(ProblemDto dto) {
+        dto.getInvalidParams().add(new ProblemDto.Extension("token", MSG_TOKEN_FORMAT));
+        return dto;
+    }
+
+    public static ProblemDto tokenExpiredProblem(ProblemDto dto) {
+        dto.getInvalidParams().add(new ProblemDto.Extension("token", MSG_TOKEN_EXPIRED));
         return dto;
     }
 
