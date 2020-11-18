@@ -27,7 +27,6 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
     //    compileOnly 'com.google.errorprone:error_prone_core:2.4.0'
     //    testCompileOnly 'com.google.errorprone:error_prone_core:2.4.0'
     providedCompile 'javax:javaee-web-api:8.0.1'
@@ -73,11 +72,29 @@ dependencies {
 
     annotationProcessor 'org.eclipse.persistence:org.eclipse.persistence.jpa.modelgen.processor:2.7.6'
 
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+    testImplementation 'org.glassfish.jersey.inject:jersey-hk2:2.30'
+    testImplementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.3'
+    testImplementation 'io.rest-assured:rest-assured:4.3.1'
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'com.h2database:h2:1.4.196'
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+}
+
+test {
+    useJUnitPlatform() // for junit5, but jersey test framework only works with junit4
+    testLogging {
+        // output is shown only once (coz gradle doesn't run them again if there is no change in code)
+        // so use "./gradlew cleanTest test" to rerun the tests
+        // also using "./gradlew test --tests NameOfTestClass" you can run only a single test class
+        events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
+        exceptionFormat 'short' // available choices: short/full
+    }
 }
 
 sourceSets.main.output.resourcesDir = sourceSets.main.java.outputDir
