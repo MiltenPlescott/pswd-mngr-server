@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package com.github.miltenplescott.pswdmngrserver.login;
+package com.github.miltenplescott.pswdmngrserver.vault;
 
 import com.github.miltenplescott.pswdmngrserver.BaseEntity;
 import java.io.Serializable;
@@ -17,7 +17,7 @@ import javax.persistence.Entity;
  * @author Milten Plescott
  */
 @Entity
-public class Login extends BaseEntity implements Serializable {
+public class VaultEntry extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
