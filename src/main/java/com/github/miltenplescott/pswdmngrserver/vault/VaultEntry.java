@@ -12,10 +12,6 @@ import com.github.miltenplescott.pswdmngrserver.BaseEntity;
 import java.io.Serializable;
 import javax.persistence.Entity;
 
-/**
- *
- * @author Milten Plescott
- */
 @Entity
 public class VaultEntry extends BaseEntity implements Serializable {
 

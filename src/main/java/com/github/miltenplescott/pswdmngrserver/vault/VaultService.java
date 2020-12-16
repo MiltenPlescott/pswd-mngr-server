@@ -11,10 +11,6 @@ package com.github.miltenplescott.pswdmngrserver.vault;
 import com.github.miltenplescott.pswdmngrserver.GenericDao;
 import javax.persistence.EntityExistsException;
 
-/**
- *
- * @author Milten Plescott
- */
 public class VaultService {
 
     // TODO: inject
