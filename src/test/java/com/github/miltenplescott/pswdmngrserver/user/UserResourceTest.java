@@ -216,7 +216,6 @@ public class UserResourceTest {
                 assertEquals(responseDto, pswdLengthProblem);
     }
 
-
     @Test
     public void createAccount_withNonBase64Pswd_returnsPswdFormatProblem() {
         String payload = createAuthenticationDtoPayload(EXAMPLE_USERNAME, "some extra non-base64 symbols: .,<>:/()[]{}'!@#$%^&*-_=+");

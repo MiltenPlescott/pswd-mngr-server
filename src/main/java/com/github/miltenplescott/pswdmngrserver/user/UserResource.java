@@ -8,8 +8,8 @@
 
 package com.github.miltenplescott.pswdmngrserver.user;
 
+import com.github.miltenplescott.pswdmngrserver.ApplicationConfig;
 import com.github.miltenplescott.pswdmngrserver.ProblemDto;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -22,36 +22,32 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("account")
+@Path("/account")
 @Stateless
 public class UserResource {
 
     @Inject
     private UserService userService;
 
-    static final String UTF8_SUFFIX = ";charset=" + StandardCharsets.UTF_8.name();
-
     @POST  // create account
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces({MediaType.APPLICATION_JSON, ProblemDto.MEDIA_TYPE_PROBLEM_JSON})
+    @Produces(ProblemDto.MEDIA_TYPE_PROBLEM_JSON)
     public Response createAccount(AuthenticationDto dto) {
         Optional<ProblemDto> maybeProblem = userService.createUser(dto.getUsername(), dto.getMasterPswd());
         if (maybeProblem.isEmpty()) {
-            return Response.
-                status(Response.Status.OK).
-                type(MediaType.APPLICATION_JSON + UTF8_SUFFIX).build();
+            return Response.status(Response.Status.OK).build();
         }
         else {
             maybeProblem.get().setStatus(Response.Status.BAD_REQUEST.getStatusCode());
             return Response.
                 status(maybeProblem.get().getStatus()).
-                type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + UTF8_SUFFIX).
+                type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + ApplicationConfig.UTF8_SUFFIX).
                 entity(maybeProblem.get()).build();
         }
     }
 
     @POST
-    @Path("login")
+    @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces({MediaType.APPLICATION_JSON, ProblemDto.MEDIA_TYPE_PROBLEM_JSON})
     public Response login(AuthenticationDto dto) {
@@ -61,24 +57,24 @@ public class UserResource {
         if (maybeProblem.isEmpty()) {
             return Response.
                 status(Response.Status.OK).
-                type(MediaType.APPLICATION_JSON + UTF8_SUFFIX).
+                type(MediaType.APPLICATION_JSON + ApplicationConfig.UTF8_SUFFIX).
                 entity(token).build();
         }
         else {
             maybeProblem.get().setStatus(Response.Status.BAD_REQUEST.getStatusCode());
             return Response.
                 status(maybeProblem.get().getStatus()).
-                type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + UTF8_SUFFIX).
+                type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + ApplicationConfig.UTF8_SUFFIX).
                 entity(maybeProblem.get()).build();
         }
     }
 
     @POST
-    @Path("logout")
+    @Path("/logout")
     @Produces(ProblemDto.MEDIA_TYPE_PROBLEM_JSON)
     @Secured
     public Response logout(@Context HttpServletRequest request) {
-        Optional<String> maybeUsername = Optional.ofNullable((String) request.getAttribute(AuthenticationRequestFilter.PROPERTY_USERNAME));
+        Optional<String> maybeUsername = getUsername(request);
         if (maybeUsername.isPresent()) {
             userService.logout(maybeUsername.get());
             return Response.status(Response.Status.OK).build();
@@ -88,5 +84,8 @@ public class UserResource {
         }
     }
 
+    public static Optional<String> getUsername(HttpServletRequest request) {
+        return Optional.ofNullable((String) request.getAttribute(AuthenticationRequestFilter.PROPERTY_USERNAME));
+    }
 
 }

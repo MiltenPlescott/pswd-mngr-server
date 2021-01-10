@@ -8,6 +8,7 @@
 
 package com.github.miltenplescott.pswdmngrserver.user;
 
+import com.github.miltenplescott.pswdmngrserver.ApplicationConfig;
 import com.github.miltenplescott.pswdmngrserver.CryptoUtils;
 import com.github.miltenplescott.pswdmngrserver.ProblemDto;
 import java.io.IOException;
@@ -123,7 +124,7 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
         requestContext.abortWith(
             Response.
                 status(Response.Status.UNAUTHORIZED).
-                type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + UserResource.UTF8_SUFFIX).
+                type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + ApplicationConfig.UTF8_SUFFIX).
                 header(HttpHeaders.WWW_AUTHENTICATE, AUTH_SCHEME).
                 entity(problem).build()
         );

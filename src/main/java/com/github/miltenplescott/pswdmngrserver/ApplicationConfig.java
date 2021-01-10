@@ -10,6 +10,7 @@ package com.github.miltenplescott.pswdmngrserver;
 
 import com.github.miltenplescott.pswdmngrserver.user.AuthenticationRequestFilter;
 import com.github.miltenplescott.pswdmngrserver.user.UserResource;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.ApplicationPath;
@@ -17,6 +18,8 @@ import javax.ws.rs.core.Application;
 
 @ApplicationPath("pswd-mngr")
 public class ApplicationConfig extends Application {
+
+    public static final String UTF8_SUFFIX = "; charset=" + StandardCharsets.UTF_8.name();
 
     @Override
     public Set<Class<?>> getClasses() {
