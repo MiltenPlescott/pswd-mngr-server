@@ -22,7 +22,7 @@ public class CryptoUtilsTest {
 
     private static final String EXAMPLE_BASE64_STRING = "FY7iq0Y1ja2loHmMurgM78VW8Kt3PUpK2oKNjSd0Tt8=";
 
-    public static SecureRandom rng;
+    private static SecureRandom rng;
 
     public CryptoUtilsTest() {
     }

@@ -99,13 +99,8 @@ public final class ProblemDto {
                 return false;
             }
             final Extension other = (Extension) obj;
-            if (!Objects.equals(this.name, other.name)) {
-                return false;
-            }
-            if (!Objects.equals(this.reason, other.reason)) {
-                return false;
-            }
-            return true;
+            return Objects.equals(this.name, other.name)
+                && Objects.equals(this.reason, other.reason);
         }
 
     }
@@ -151,7 +146,7 @@ public final class ProblemDto {
     }
 
     public List<Extension> getInvalidParams() {
-        return invalidParams;
+        return invalidParams;  // don't return a copy
     }
 
     public void setInvalidParams(List<Extension> invalidParams) {
@@ -175,25 +170,12 @@ public final class ProblemDto {
             return false;
         }
         final ProblemDto other = (ProblemDto) obj;
-        if (!Objects.equals(this.type, other.type)) {
-            return false;
-        }
-        if (!Objects.equals(this.title, other.title)) {
-            return false;
-        }
-        if (!Objects.equals(this.status, other.status)) {
-            return false;
-        }
-        if (!Objects.equals(this.detail, other.detail)) {
-            return false;
-        }
-        if (!Objects.equals(this.instance, other.instance)) {
-            return false;
-        }
-        if (!Objects.equals(this.invalidParams, other.invalidParams)) {
-            return false;
-        }
-        return true;
+        return Objects.equals(this.type, other.type)
+            && Objects.equals(this.title, other.title)
+            && Objects.equals(this.status, other.status)
+            && Objects.equals(this.detail, other.detail)
+            && Objects.equals(this.instance, other.instance)
+            && Objects.equals(this.invalidParams, other.invalidParams);
     }
 
 }

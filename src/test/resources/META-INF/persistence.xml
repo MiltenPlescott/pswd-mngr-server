@@ -4,7 +4,10 @@
     <persistence-unit name="test-resource-local" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <mapping-file>META-INF/orm.xml</mapping-file>
+        <class>com.github.miltenplescott.pswdmngrserver.BaseEntity</class>
         <class>com.github.miltenplescott.pswdmngrserver.user.User</class>
+        <class>com.github.miltenplescott.pswdmngrserver.vault.VaultEntry</class>
+        <class>com.github.miltenplescott.pswdmngrserver.vault.VaultEntryPk</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
@@ -25,9 +28,13 @@
     <persistence-unit name="test-tcp" transaction-type="RESOURCE_LOCAL">
         <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
         <mapping-file>META-INF/orm.xml</mapping-file>
+        <class>com.github.miltenplescott.pswdmngrserver.BaseEntity</class>
         <class>com.github.miltenplescott.pswdmngrserver.user.User</class>
+        <class>com.github.miltenplescott.pswdmngrserver.vault.VaultEntry</class>
+        <class>com.github.miltenplescott.pswdmngrserver.vault.VaultEntryPk</class>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
+            <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
 
             <!-- database connection -->
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/pswd-mngr-db/test-tcp"/>

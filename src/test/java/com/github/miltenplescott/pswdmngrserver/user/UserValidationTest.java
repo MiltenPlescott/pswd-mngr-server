@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserValidationTest {
 
     private static EntityManagerFactory emf;
-    private static String property_name;
+    private static String propertyName;
     private static Validator validator;
 
     private User user;
@@ -40,8 +40,9 @@ public class UserValidationTest {
 
     @BeforeAll
     public static void initAll() {
+        // emf required for populating metamodel attributes
         emf = Persistence.createEntityManagerFactory("test-resource-local");
-        property_name = User_.username.getName();
+        propertyName = User_.username.getName();
         emf.close();
         validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
@@ -67,7 +68,7 @@ public class UserValidationTest {
     @Test
     public void ifUsernameIsNull_usernameValidationFails() {
         user.setUsername(null);
-        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, property_name);
+        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, propertyName);
         for (ConstraintViolation<User> cv : violations) {
             if (getAnnotationClass(cv) == NotNull.class) {
                 violationFound = true;
@@ -79,7 +80,7 @@ public class UserValidationTest {
     @Test
     public void ifUsernameIsEmpty_usernameValidationFails() {
         user.setUsername("");
-        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, property_name);
+        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, propertyName);
         for (ConstraintViolation<User> cv : violations) {
             if (getAnnotationClass(cv) == Size.class) {
                 violationFound = true;
@@ -91,7 +92,7 @@ public class UserValidationTest {
     @Test
     public void ifUsernameIsTooShortWhitespace_usernameValidationFails() {
         user.setUsername(" ".repeat(User.USERNAME_MIN_LENGTH - 1));
-        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, property_name);
+        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, propertyName);
         for (ConstraintViolation<User> cv : violations) {
             if (getAnnotationClass(cv) == Size.class) {
                 violationFound = true;
@@ -103,7 +104,7 @@ public class UserValidationTest {
     @Test
     public void ifUsernameIsCorrectLengthWhitespace_usernameValidationFails() {
         user.setUsername(" ".repeat(User.USERNAME_MIN_LENGTH));
-        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, property_name);
+        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, propertyName);
         for (ConstraintViolation<User> cv : violations) {
             if (getAnnotationClass(cv) == Pattern.class) {
                 violationFound = true;
@@ -115,7 +116,7 @@ public class UserValidationTest {
     @Test
     public void ifUsernameIsTooLongWhitespace_usernameValidationFails() {
         user.setUsername(" ".repeat(User.USERNAME_MAX_LENGTH + 1));
-        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, property_name);
+        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, propertyName);
         for (ConstraintViolation<User> cv : violations) {
             if (getAnnotationClass(cv) == Pattern.class) {
                 violationFound = true;
@@ -127,7 +128,7 @@ public class UserValidationTest {
     @Test
     public void ifUsernameIsTooShort_usernameValidationFails() {
         user.setUsername("x".repeat(User.USERNAME_MIN_LENGTH - 1));
-        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, property_name);
+        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, propertyName);
         for (ConstraintViolation<User> cv : violations) {
             if (getAnnotationClass(cv) == Size.class) {
                 violationFound = true;
@@ -139,7 +140,7 @@ public class UserValidationTest {
     @Test
     public void ifUsernameIsTooLong_usernameValidationFails() {
         user.setUsername("x".repeat(User.USERNAME_MAX_LENGTH + 1));
-        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, property_name);
+        Set<ConstraintViolation<User>> violations = validator.validateProperty(user, propertyName);
         for (ConstraintViolation<User> cv : violations) {
             if (getAnnotationClass(cv) == Size.class) {
                 violationFound = true;
@@ -154,7 +155,7 @@ public class UserValidationTest {
             if (!Character.isLetterOrDigit(c)) {
                 violationFound = false;
                 user.setUsername("x".repeat(User.USERNAME_MIN_LENGTH) + c);
-                Set<ConstraintViolation<User>> violations = validator.validateProperty(user, property_name);
+                Set<ConstraintViolation<User>> violations = validator.validateProperty(user, propertyName);
                 for (ConstraintViolation<User> cv : violations) {
                     if (getAnnotationClass(cv) == Pattern.class) {
                         violationFound = true;

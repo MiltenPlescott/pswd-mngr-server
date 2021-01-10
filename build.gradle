@@ -11,8 +11,9 @@ plugins {
     id 'war'
     //id 'application' // replace with 'base' after setting up the server
     id 'pmd'
+    id 'jacoco'
     //    id 'com.github.spotbugs' version '4.2.3' // **spotbugs
-    //    id 'net.ltgt.errorprone' version '1.2.1'
+    id 'net.ltgt.errorprone' version '1.2.1'
     id 'com.dorongold.task-tree' version '1.5'
 }
 
@@ -27,8 +28,10 @@ repositories {
 }
 
 dependencies {
-    //    compileOnly 'com.google.errorprone:error_prone_core:2.4.0'
-    //    testCompileOnly 'com.google.errorprone:error_prone_core:2.4.0'
+    compileOnly 'com.google.errorprone:error_prone_core:2.4.0'
+    testCompileOnly 'com.google.errorprone:error_prone_core:2.4.0'
+    annotationProcessor 'com.google.errorprone:error_prone_core:2.4.0'
+
     providedCompile 'javax:javaee-web-api:8.0.1'
     compileOnly 'javax:javaee-web-api:8.0.1:javadoc'
     // providedCompile 'fish.payara.distributions:payara-web:5.2020.3'
@@ -95,6 +98,15 @@ test {
         events 'passed', 'skipped', 'failed', 'standardOut', 'standardError'
         exceptionFormat 'short' // available choices: short/full
     }
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled false
+        csv.enabled false
+    }
 }
 
 sourceSets.main.output.resourcesDir = sourceSets.main.java.outputDir
@@ -114,6 +126,7 @@ task startServer(type: Exec) {
 //     connector = SocketAttach
 //     host = localhost
 //     port = 9009
+// this starts server in debug mode, i.e. run stopServer before running this
 task debugServer(type: Exec) {
     description = 'Starts Payara server in debug mode.'
     workingDir asadminDir

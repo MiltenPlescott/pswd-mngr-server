@@ -24,7 +24,6 @@ public class UserValidation {
 
     public UserValidation() {
         validator = Validation.buildDefaultValidatorFactory().getValidator();
-        dto = UserProblems.createDefaultUsernameProblem();
     }
 
     public Optional<ProblemDto> validate(User user) {
@@ -34,7 +33,7 @@ public class UserValidation {
 
         dto = UserProblems.createDefaultUsernameProblem();
 
-        Set<ConstraintViolation<User>> usernameViolations = validator.validateProperty(user, "username");
+        Set<ConstraintViolation<User>> usernameViolations = validator.validateProperty(user, User_.username.getName());
         for (ConstraintViolation<User> cv : usernameViolations) {
             UserProblems.usernameViolationToProblemDto(dto, cv);
         }
