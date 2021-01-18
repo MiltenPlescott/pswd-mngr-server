@@ -27,6 +27,7 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.Root;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -52,6 +53,9 @@ public class UserResourceTest {
     private static EntityManager em;
 
     private Jsonb jsonb;
+
+    private static final Matcher mimeJsonMatcher = allOf(containsString(MediaType.APPLICATION_JSON), containsString(StandardCharsets.UTF_8.name()));
+    private static final Matcher mimeProblemMatcher = allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name()));
 
     private static final ProblemDto usernameProblem;
     private static final ProblemDto pswdLengthProblem;
@@ -193,7 +197,7 @@ public class UserResourceTest {
             then().assertThat().
                 statusCode(BAD_REQUEST).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(responseDto, usernameProblem);
     }
@@ -211,7 +215,7 @@ public class UserResourceTest {
             then().assertThat().
                 statusCode(BAD_REQUEST).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(responseDto, pswdLengthProblem);
     }
@@ -229,7 +233,7 @@ public class UserResourceTest {
             then().assertThat().
                 statusCode(BAD_REQUEST).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(responseDto, pswdFormatProblem);
     }
@@ -247,7 +251,7 @@ public class UserResourceTest {
             then().assertThat().
                 statusCode(OK).
                     and().
-                contentType(allOf(containsString(MediaType.APPLICATION_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeJsonMatcher);
                  // and()
                 assertEquals(CryptoUtils.decodeToken(responseDto.getToken()).length, AuthTokenManager.TOKEN_LENGTH_BYTES);
                  // and()
@@ -271,7 +275,7 @@ public class UserResourceTest {
             then().assertThat().
                 statusCode(BAD_REQUEST).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(responseDto, authProblem);
     }
@@ -291,7 +295,7 @@ public class UserResourceTest {
             then().assertThat().
                 statusCode(BAD_REQUEST).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(responseDto, authProblem);
     }
@@ -311,7 +315,7 @@ public class UserResourceTest {
             then().assertThat().
                 statusCode(BAD_REQUEST).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(responseDto, authProblem);
     }
@@ -356,7 +360,7 @@ public class UserResourceTest {
                     and().
                 header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationRequestFilter.AUTH_SCHEME).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(logoutResponseDto, authHeaderProblem);
     }
@@ -381,7 +385,7 @@ public class UserResourceTest {
                     and().
                 header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationRequestFilter.AUTH_SCHEME).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(logoutResponseDto, authHeaderProblem);
     }
@@ -412,7 +416,7 @@ public class UserResourceTest {
                     and().
                 header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationRequestFilter.AUTH_SCHEME).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(logoutResponseDto, authHeaderProblem);
     }
@@ -441,7 +445,7 @@ public class UserResourceTest {
                     and().
                 header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationRequestFilter.AUTH_SCHEME).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(logoutResponseDto, authHeaderProblem);
     }
@@ -466,7 +470,7 @@ public class UserResourceTest {
                     and().
                 header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationRequestFilter.AUTH_SCHEME).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(logoutResponseDto, tokenLengthProblem);
     }
@@ -492,7 +496,7 @@ public class UserResourceTest {
                     and().
                 header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationRequestFilter.AUTH_SCHEME).
                     and().
-                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+                contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(logoutResponseDto, tokenFormatProblem);
     }
@@ -522,7 +526,7 @@ public class UserResourceTest {
 //                    and().
 //                header(HttpHeaders.WWW_AUTHENTICATE, AuthenticationRequestFilter.AUTH_SCHEME).
 //                    and().
-//                contentType(allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name())));
+//                contentType(mimeProblemMatcher);
 //                 // and()
 //                assertEquals(logoutResponseDto, tokenExpiredProblem);
 //    }
