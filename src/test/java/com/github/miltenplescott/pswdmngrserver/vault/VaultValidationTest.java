@@ -54,12 +54,10 @@ public class VaultValidationTest {
 
     @AfterEach
     public void tearDownEach() {
-
     }
 
     @AfterAll
     public static void tearDownAll() {
-
     }
 
     private static Class<? extends Annotation> getAnnotationClass(ConstraintViolation<VaultEntry> violation) {
