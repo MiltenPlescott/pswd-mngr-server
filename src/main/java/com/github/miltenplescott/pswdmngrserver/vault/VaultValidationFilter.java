@@ -48,9 +48,10 @@ public class VaultValidationFilter implements ContainerRequestFilter {
     }
 
     private void abort(ContainerRequestContext requestContext, ProblemDto problem) {
+        problem.setStatus(Response.Status.BAD_REQUEST.getStatusCode());
         requestContext.abortWith(
             Response.
-                status(Response.Status.BAD_REQUEST).
+                status(problem.getStatus()).
                 type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + ApplicationConfig.UTF8_SUFFIX).
                 entity(problem).build()
         );

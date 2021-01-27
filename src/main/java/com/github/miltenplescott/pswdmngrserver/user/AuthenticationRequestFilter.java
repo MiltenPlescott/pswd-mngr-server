@@ -121,9 +121,10 @@ public class AuthenticationRequestFilter implements ContainerRequestFilter {
     }
 
     private void abort(ContainerRequestContext requestContext, ProblemDto problem) {
+        problem.setStatus(Response.Status.UNAUTHORIZED.getStatusCode());
         requestContext.abortWith(
             Response.
-                status(Response.Status.UNAUTHORIZED).
+                status(problem.getStatus()).
                 type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + ApplicationConfig.UTF8_SUFFIX).
                 header(HttpHeaders.WWW_AUTHENTICATE, AUTH_SCHEME).
                 entity(problem).build()
