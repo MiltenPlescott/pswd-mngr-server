@@ -6,3 +6,6 @@ build
 
 # Ignore FB Infer
 infer-out
+
+# Ignore netbeans dir
+nbproject/
