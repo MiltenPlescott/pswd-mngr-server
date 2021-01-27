@@ -102,8 +102,7 @@ public class VaultService {
         Optional<User> maybeUser = userDao.findByName(username);
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
-            List<VaultEntry> vaultEntries = vaultDao.findAll(user.getId());  // throwing exception
-//            List<VaultEntry> vaultEntries = vaultDao.findAll(user);
+            List<VaultEntry> vaultEntries = vaultDao.findAll(user.getId());
             return vaultEntryListToDto(vaultEntries);
         }
         else {
