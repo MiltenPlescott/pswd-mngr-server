@@ -8,6 +8,7 @@
 
 package com.github.miltenplescott.pswdmngrserver;
 
+import com.google.common.annotations.VisibleForTesting;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -149,6 +150,8 @@ public final class ProblemDto {
         return invalidParams;  // don't return a copy
     }
 
+    // needs to be public so that Jsonb#fromJson() can parse json strings correctly
+    @VisibleForTesting
     public void setInvalidParams(List<Extension> invalidParams) {
         this.invalidParams = invalidParams;
     }
