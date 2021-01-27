@@ -54,8 +54,8 @@ public class UserResourceTest {
 
     private Jsonb jsonb;
 
-    private static final Matcher mimeJsonMatcher = allOf(containsString(MediaType.APPLICATION_JSON), containsString(StandardCharsets.UTF_8.name()));
-    private static final Matcher mimeProblemMatcher = allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name()));
+    private static final Matcher<String> mimeJsonMatcher = allOf(containsString(MediaType.APPLICATION_JSON), containsString(StandardCharsets.UTF_8.name()));
+    private static final Matcher<String> mimeProblemMatcher = allOf(containsString(ProblemDto.MEDIA_TYPE_PROBLEM_JSON), containsString(StandardCharsets.UTF_8.name()));
 
     private static final ProblemDto usernameProblem;
     private static final ProblemDto pswdLengthProblem;
