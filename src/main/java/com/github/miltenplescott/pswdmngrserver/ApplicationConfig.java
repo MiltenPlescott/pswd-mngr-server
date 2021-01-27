@@ -11,6 +11,7 @@ package com.github.miltenplescott.pswdmngrserver;
 import com.github.miltenplescott.pswdmngrserver.user.AuthenticationRequestFilter;
 import com.github.miltenplescott.pswdmngrserver.user.UserResource;
 import com.github.miltenplescott.pswdmngrserver.vault.VaultResource;
+import com.github.miltenplescott.pswdmngrserver.vault.VaultValidationFilter;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +29,7 @@ public class ApplicationConfig extends Application {
         resources.add(UserResource.class);
         resources.add(AuthenticationRequestFilter.class);
         resources.add(VaultResource.class);
+        resources.add(VaultValidationFilter.class);
         return resources;
     }
 
