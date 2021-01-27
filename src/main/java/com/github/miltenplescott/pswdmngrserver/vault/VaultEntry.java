@@ -34,10 +34,10 @@ public class VaultEntry extends BaseEntity implements Serializable {
     static final int ENC_DATA_MIN_LENGTH = 1;
 
     /**
-     * 100 MiB
+     * 1 MiB
      */
     @Transient
-    static final int ENC_DATA_MAX_LENGTH = 100 * 1024 * 1024;
+    static final int ENC_DATA_MAX_LENGTH = 1 * 1024 * 1024;
 
     @Column(nullable = false)
     private byte[] encData;
