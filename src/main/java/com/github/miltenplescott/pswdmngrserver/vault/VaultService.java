@@ -30,12 +30,13 @@ public class VaultService {
     public VaultService() {
     }
 
-    public void createVaultEntry(String username, byte[] encData) {
+    public long createVaultEntry(String username, byte[] encData) {
         Optional<User> maybeUser = userDao.findByName(username);
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
             VaultEntry vaultEntry = new VaultEntry(encData, user);
             vaultDao.create(vaultEntry);
+            return vaultEntry.getId();
         }
         else {
             throw new AssertionError("Username not found.");
@@ -153,6 +154,18 @@ public class VaultService {
             dtoList.add(vaultEntryToDto(ve));
         }
         return dtoList;
+    }
+
+    private List<VaultEntryDto> vaultEntryListToDto2(List<VaultEntry> vaultEntries) {
+        return vaultEntries.stream()
+            .map(x -> vaultEntryToDto(x))
+            .collect(Collectors.toList());
+    }
+
+    private List<VaultEntryDto> vaultEntryListToDto3(List<VaultEntry> vaultEntries) {
+        return vaultEntries.stream()
+            .map(this::vaultEntryToDto)
+            .collect(Collectors.toList());
     }
 
 }

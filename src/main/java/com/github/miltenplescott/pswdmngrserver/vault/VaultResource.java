@@ -30,6 +30,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 @Path("/vault")
 @Stateless
@@ -58,11 +60,14 @@ public class VaultResource {
     @POST
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     @ValidatedInput
-    public Response createVaultEntry(@Context HttpServletRequest request, byte[] encData) {
+    public Response createVaultEntry(@Context HttpServletRequest request, @Context UriInfo uriInfo, byte[] encData) {
         Optional<String> maybeUsername = UserResource.getUsername(request);
         if (maybeUsername.isPresent()) {
-            vaultService.createVaultEntry(maybeUsername.get(), encData);
-            return Response.status(Response.Status.NO_CONTENT).build();
+            long createdId = vaultService.createVaultEntry(maybeUsername.get(), encData);
+            UriBuilder builder = uriInfo.getAbsolutePathBuilder().path(Long.toString(createdId));
+            return Response
+                .status(Response.Status.CREATED)
+                .header(HttpHeaders.LOCATION, builder.build()).build();
         }
         else {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
