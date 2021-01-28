@@ -25,6 +25,7 @@ import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.Root;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import org.hamcrest.Matcher;
@@ -47,6 +48,7 @@ public class UserResourceTest {
     private static final int OK = javax.ws.rs.core.Response.Status.OK.getStatusCode();
     private static final int BAD_REQUEST = javax.ws.rs.core.Response.Status.BAD_REQUEST.getStatusCode();
     private static final int UNAUTHORIZED = javax.ws.rs.core.Response.Status.UNAUTHORIZED.getStatusCode();
+    private static final int METHOD_NOT_ALLOWED = javax.ws.rs.core.Response.Status.METHOD_NOT_ALLOWED.getStatusCode();
 
     private static List<String> createdUsernames;
     private static EntityManagerFactory emf;
@@ -239,6 +241,21 @@ public class UserResourceTest {
     }
 
     @Test
+    public void getAccount_returnsMethodNotAllowed() {
+        when().
+            get("pswd-mngr/account").
+        then().assertThat().
+            statusCode(METHOD_NOT_ALLOWED).
+                and().
+            header(HttpHeaders.ALLOW, allOf(
+                containsString(HttpMethod.POST),
+                containsString(HttpMethod.PUT),
+                containsString(HttpMethod.DELETE)
+            ));
+    }
+
+
+    @Test
     public void login_withCorrectUsernameCorrectPassword_returnsOk_andToken() {
         String payload = createAuthenticationDtoPayload(EXAMPLE_USERNAME, EXAMPLE_MASTERPSWD);
         createdUsernames.add(EXAMPLE_USERNAME);
@@ -318,6 +335,36 @@ public class UserResourceTest {
                 contentType(mimeProblemMatcher);
                  // and()
                 assertEquals(responseDto, authProblem);
+    }
+
+    @Test
+    public void getLogin_returnsMethodNotAllowed() {
+        when().
+            get("pswd-mngr/account/login").
+        then().assertThat().
+            statusCode(METHOD_NOT_ALLOWED).
+                and().
+            header(HttpHeaders.ALLOW, containsString(HttpMethod.POST));
+    }
+
+    @Test
+    public void putLogin_returnsMethodNotAllowed() {
+        when().
+            put("pswd-mngr/account/login").
+        then().assertThat().
+            statusCode(METHOD_NOT_ALLOWED).
+                and().
+            header(HttpHeaders.ALLOW, containsString(HttpMethod.POST));
+    }
+
+    @Test
+    public void deleteLogin_returnsMethodNotAllowed() {
+        when().
+            delete("pswd-mngr/account/login").
+        then().assertThat().
+            statusCode(METHOD_NOT_ALLOWED).
+                and().
+            header(HttpHeaders.ALLOW, containsString(HttpMethod.POST));
     }
 
     @Test
@@ -530,5 +577,35 @@ public class UserResourceTest {
 //                 // and()
 //                assertEquals(logoutResponseDto, tokenExpiredProblem);
 //    }
+
+    @Test
+    public void getLogout_returnsMethodNotAllowed() {
+        when().
+            get("pswd-mngr/account/logout").
+        then().assertThat().
+            statusCode(METHOD_NOT_ALLOWED).
+                and().
+            header(HttpHeaders.ALLOW, containsString(HttpMethod.POST));
+    }
+
+    @Test
+    public void putLogout_returnsMethodNotAllowed() {
+        when().
+            put("pswd-mngr/account/logout").
+        then().assertThat().
+            statusCode(METHOD_NOT_ALLOWED).
+                and().
+            header(HttpHeaders.ALLOW, containsString(HttpMethod.POST));
+    }
+
+    @Test
+    public void deleteLogout_returnsMethodNotAllowed() {
+        when().
+            delete("pswd-mngr/account/logout").
+        then().assertThat().
+            statusCode(METHOD_NOT_ALLOWED).
+                and().
+            header(HttpHeaders.ALLOW, containsString(HttpMethod.POST));
+    }
 
 }

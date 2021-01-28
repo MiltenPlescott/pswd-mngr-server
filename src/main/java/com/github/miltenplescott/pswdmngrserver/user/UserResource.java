@@ -15,10 +15,15 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -28,6 +33,13 @@ public class UserResource {
 
     @Inject
     private UserService userService;
+
+    @GET
+    public Response getNotSupported() {
+        return Response
+            .status(Response.Status.METHOD_NOT_ALLOWED)
+            .header(HttpHeaders.ALLOW, HttpMethod.POST + ", " + HttpMethod.PUT + ", " + HttpMethod.DELETE).build();
+    }
 
     @POST  // create account
     @Consumes(MediaType.APPLICATION_JSON)
@@ -44,6 +56,14 @@ public class UserResource {
                 type(ProblemDto.MEDIA_TYPE_PROBLEM_JSON + ApplicationConfig.UTF8_SUFFIX).
                 entity(maybeProblem.get()).build();
         }
+    }
+
+    @GET
+    @Path("/login")
+    public Response getLoginNotSupported() {
+        return Response
+            .status(Response.Status.METHOD_NOT_ALLOWED)
+            .header(HttpHeaders.ALLOW, HttpMethod.POST).build();
     }
 
     @POST
@@ -69,6 +89,30 @@ public class UserResource {
         }
     }
 
+    @PUT
+    @Path("/login")
+    public Response putLoginNotSupported() {
+        return Response
+            .status(Response.Status.METHOD_NOT_ALLOWED)
+            .header(HttpHeaders.ALLOW, HttpMethod.POST).build();
+    }
+
+    @DELETE
+    @Path("/login")
+    public Response deleteLoginNotSupported() {
+        return Response
+            .status(Response.Status.METHOD_NOT_ALLOWED)
+            .header(HttpHeaders.ALLOW, HttpMethod.POST).build();
+    }
+
+    @GET
+    @Path("/logout")
+    public Response getLogoutNotSupported() {
+        return Response
+            .status(Response.Status.METHOD_NOT_ALLOWED)
+            .header(HttpHeaders.ALLOW, HttpMethod.POST).build();
+    }
+
     @POST
     @Path("/logout")
     @Produces(ProblemDto.MEDIA_TYPE_PROBLEM_JSON)
@@ -82,6 +126,22 @@ public class UserResource {
         else {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PUT
+    @Path("/logout")
+    public Response putLogoutNotSupported() {
+        return Response
+            .status(Response.Status.METHOD_NOT_ALLOWED)
+            .header(HttpHeaders.ALLOW, HttpMethod.POST).build();
+    }
+
+    @DELETE
+    @Path("/logout")
+    public Response deleteLogoutNotSupported() {
+        return Response
+            .status(Response.Status.METHOD_NOT_ALLOWED)
+            .header(HttpHeaders.ALLOW, HttpMethod.POST).build();
     }
 
     public static Optional<String> getUsername(HttpServletRequest request) {
